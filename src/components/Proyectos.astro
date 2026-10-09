@@ -1,0 +1,117 @@
+---
+import { proyectos, distritos } from "../data/proyectos";
+import ProyectoFila from "./ProyectoFila.astro";
+
+const columnas = ["Proyecto", "Distrito", "Dormitorios", "Área", "Precio", "Entrega", ""];
+---
+
+<section id="proyectos" class="seccion">
+  <div class="contenedor">
+    <div class="cabecera">
+      <h2>Proyectos disponibles</h2>
+      <p class="conteo" aria-live="polite" data-conteo>{proyectos.length} proyectos</p>
+    </div>
+
+    <div class="filtros" role="group" aria-label="Filtrar por distrito">
+      <button type="button" data-filtro="todos" aria-pressed="true">Todos</button>
+      {
+        distritos.map((d) => (
+          <button type="button" data-filtro={d} aria-pressed="false">
+            {d}
+          </button>
+        ))
+      }
+    </div>
+
+    <ul class="lista">
+      <li class="encabezado" aria-hidden="true">
+        {columnas.map((c) => <span>{c}</span>)}
+      </li>
+      {proyectos.map((p) => <ProyectoFila proyecto={p} />)}
+    </ul>
+  </div>
+</section>
+
+<script>
+  const botones = document.querySelectorAll<HTMLButtonElement>("[data-filtro]");
+  const filas = document.querySelectorAll<HTMLElement>("[data-distrito]");
+  const conteo = document.querySelector<HTMLElement>("[data-conteo]");
+
+  botones.forEach((boton) => {
+    boton.addEventListener("click", () => {
+      const filtro = boton.dataset.filtro;
+      botones.forEach((b) => b.setAttribute("aria-pressed", String(b === boton)));
+
+      let visibles = 0;
+      filas.forEach((fila) => {
+        const ver = filtro === "todos" || fila.dataset.distrito === filtro;
+        fila.hidden = !ver;
+        if (ver) visibles++;
+      });
+
+      if (conteo) conteo.textContent = `${visibles} ${visibles === 1 ? "proyecto" : "proyectos"}`;
+    });
+  });
+</script>
+
+<style>
+  .seccion {
+    padding-block: clamp(3.5rem, 7vw, 6rem);
+    background: #fff;
+    border-block: 1px solid var(--linea);
+  }
+
+  .cabecera {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  h2 {
+    color: var(--azul);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    font-stretch: 68%;
+    line-height: 1;
+  }
+
+  .conteo { color: var(--concreto); }
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block: 1.75rem 1.5rem;
+  }
+
+  .filtros button {
+    padding: 0.45rem 0.95rem;
+    border: 1px solid var(--linea);
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .filtros button:hover { border-color: var(--azul); }
+  .filtros button[aria-pressed="true"] {
+    background: var(--azul);
+    border-color: var(--azul);
+    color: #fff;
+  }
+
+  .lista { list-style: none; padding: 0; }
+
+  .encabezado {
+    display: grid;
+    grid-template-columns: var(--cols-proyecto);
+    gap: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--azul);
+    color: var(--concreto);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 860px) {
+    .encabezado { display: none; }
+  }
+</style>

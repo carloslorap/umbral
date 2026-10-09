@@ -1,0 +1,67 @@
+---
+const enlaces = [
+  { href: "#proyectos", texto: "Proyectos" },
+  { href: "#proceso", texto: "Cómo comprar" },
+  { href: "#contacto", texto: "Contacto" },
+];
+---
+
+<header class="header">
+  <div class="contenedor fila">
+    <a href="/" class="marca" aria-label="Umbral Inmobiliaria, inicio">
+      <!-- Símbolo de puerta de plano arquitectónico -->
+      <svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true">
+        <rect x="3" y="3" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" />
+        <path d="M14 25V13a12 12 0 0 1 11 12" fill="none" stroke="var(--ocre)" stroke-width="2.5" />
+      </svg>
+      <span>Umbral</span>
+    </a>
+
+    <nav aria-label="Principal">
+      <ul>
+        {enlaces.map((e) => <li><a href={e.href}>{e.texto}</a></li>)}
+        <li><a href="/about">Nosotros</a></li>
+      </ul>
+    </nav>
+
+    <a class="boton cta" href="#contacto">Agendar visita</a>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--muro) 90%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--linea);
+  }
+  .fila {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 68px;
+  }
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--azul);
+    text-decoration: none;
+    font-weight: 750;
+    font-stretch: 118%;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+  }
+  nav { margin-left: auto; }
+  ul { display: flex; gap: 1.75rem; list-style: none; padding: 0; }
+  nav a { color: var(--concreto); text-decoration: none; font-weight: 500; }
+  nav a:hover { color: var(--azul); }
+  .cta { padding: 0.55rem 1.1rem; }
+
+  @media (max-width: 720px) {
+    nav { display: none; }
+    .cta { margin-left: auto; }
+  }
+</style>

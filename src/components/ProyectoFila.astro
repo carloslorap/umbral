@@ -1,0 +1,99 @@
+---
+import type { Proyecto } from "../data/proyectos";
+
+interface Props {
+  proyecto: Proyecto;
+}
+
+const { proyecto: p } = Astro.props;
+
+const soles = new Intl.NumberFormat("es-PE", {
+  style: "currency",
+  currency: "PEN",
+  maximumFractionDigits: 0,
+});
+
+const minD = Math.min(...p.dormitorios);
+const maxD = Math.max(...p.dormitorios);
+const dormitorios = minD === maxD ? `${minD} dorm.` : `${minD} a ${maxD} dorm.`;
+
+const claseEstado = {
+  "En planos": "planos",
+  "En construcción": "obra",
+  "Entrega inmediata": "listo",
+}[p.estado];
+---
+
+<li class="fila" data-distrito={p.distrito}>
+  <div class="nombre">
+    <h3>{p.nombre}</h3>
+    <p>{p.direccion}</p>
+  </div>
+  <p data-label="Distrito">{p.distrito}</p>
+  <p data-label="Dormitorios">{dormitorios}</p>
+  <p data-label="Área">{p.areaMin} a {p.areaMax} m²</p>
+  <p data-label="Precio" class="precio">Desde {soles.format(p.precioDesde)}</p>
+  <p data-label="Entrega" class="entrega">
+    <span class:list={["estado", claseEstado]}>{p.estado}</span>
+    <small>{p.entrega}</small>
+  </p>
+  <a class="consultar" href={`?proyecto=${p.id}#contacto`} aria-label={`Consultar por ${p.nombre}`}>
+    Consultar
+  </a>
+</li>
+
+<style>
+  .fila {
+    display: grid;
+    grid-template-columns: var(--cols-proyecto);
+    gap: 1rem;
+    align-items: center;
+    padding: 1.15rem 0;
+    border-bottom: 1px solid var(--linea);
+  }
+
+  /* Ojo: display:grid le gana al atributo hidden, por eso lo forzamos */
+  .fila[hidden] { display: none; }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    font-stretch: 85%;
+    color: var(--azul);
+  }
+  .nombre p { color: var(--concreto); font-size: 0.92rem; }
+
+  .precio { font-weight: 650; font-variant-numeric: tabular-nums; }
+
+  .entrega { display: flex; flex-direction: column; gap: 0.2rem; }
+  .entrega small { color: var(--concreto); font-size: 0.85rem; }
+
+  .estado {
+    align-self: flex-start;
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--radio);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .planos { background: var(--azul-claro); color: var(--azul); }
+  .obra { background: #f4e3c4; color: #7a5212; }
+  .listo { background: #d7eadb; color: #22593a; }
+
+  .consultar {
+    color: var(--azul);
+    font-weight: 600;
+    text-underline-offset: 3px;
+  }
+
+  /* En móvil cada fila se vuelve una ficha con etiquetas */
+  @media (max-width: 860px) {
+    .fila { grid-template-columns: 1fr 1fr; gap: 0.6rem 1rem; }
+    .nombre, .consultar { grid-column: 1 / -1; }
+    [data-label]::before {
+      content: attr(data-label);
+      display: block;
+      color: var(--concreto);
+      font-size: 0.8rem;
+    }
+  }
+</style>

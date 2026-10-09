@@ -1,0 +1,15 @@
+---
+const anio = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="contenedor fila">
+    <p>© {anio} Umbral Inmobiliaria S.A.C.</p>
+    <p>Precios referenciales en soles, sujetos a disponibilidad.</p>
+  </div>
+</footer>
+
+<style>
+  .footer { padding-block: 1.75rem; background: #142540; color: var(--azul-claro); font-size: 0.88rem; }
+  .fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; }
+</style>

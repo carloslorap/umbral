@@ -1,0 +1,135 @@
+---
+// Plano interactivo: cada ambiente es un <g> enfocable que muestra su área.
+const ambientes = [
+  { nombre: "Sala-comedor", area: 24.5, x: 20, y: 20, w: 200, h: 150 },
+  { nombre: "Cocina", area: 8.2, x: 220, y: 20, w: 95, h: 80 },
+  { nombre: "Lavandería", area: 3.1, x: 315, y: 20, w: 65, h: 80 },
+  { nombre: "Dormitorio principal", area: 14.6, x: 220, y: 100, w: 160, h: 110 },
+  { nombre: "Terraza", area: 6.8, x: 20, y: 170, w: 120, h: 110 },
+  { nombre: "Baño de visita", area: 3.2, x: 140, y: 170, w: 80, h: 110 },
+  { nombre: "Baño principal", area: 4.4, x: 220, y: 210, w: 70, h: 70 },
+  { nombre: "Dormitorio 2", area: 9.9, x: 290, y: 210, w: 90, h: 70 },
+];
+
+const total = ambientes.reduce((suma, a) => suma + a.area, 0).toFixed(1);
+---
+
+<figure class="plano">
+  <svg viewBox="0 0 400 300" role="group" aria-label={`Plano del departamento tipo B, ${total} metros cuadrados`}>
+    <defs>
+      <pattern id="grilla" width="10" height="10" patternUnits="userSpaceOnUse">
+        <path d="M10 0H0V10" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1" />
+      </pattern>
+    </defs>
+    <rect width="400" height="300" fill="url(#grilla)" />
+
+    {
+      ambientes.map((a, i) => (
+        <g
+          class="ambiente"
+          tabindex="0"
+          role="button"
+          data-nombre={a.nombre}
+          data-area={a.area}
+          aria-label={`${a.nombre}, ${a.area} metros cuadrados`}
+          style={`--i: ${i}`}
+        >
+          <rect x={a.x} y={a.y} width={a.w} height={a.h} pathLength="100" />
+          <text x={a.x + a.w / 2} y={a.y + a.h / 2}>{a.area} m²</text>
+        </g>
+      ))
+    }
+
+    <!-- Abatimiento de la puerta de ingreso -->
+    <path class="puerta" d="M20 120 A30 30 0 0 1 50 150" pathLength="100" />
+  </svg>
+
+  <figcaption>
+    <span class="tipo">Departamento tipo B, {total} m²</span>
+    <span class="detalle" aria-live="polite">Toca un ambiente para ver su área</span>
+  </figcaption>
+</figure>
+
+<script>
+  // Los <script> de Astro se empaquetan como módulos y se ejecutan una vez por página.
+  const detalle = document.querySelector<HTMLElement>(".plano .detalle");
+  const ambientes = document.querySelectorAll<SVGGElement>(".plano .ambiente");
+
+  function mostrar(g: SVGGElement) {
+    ambientes.forEach((a) => a.classList.toggle("activo", a === g));
+    if (detalle) detalle.textContent = `${g.dataset.nombre}: ${g.dataset.area} m²`;
+  }
+
+  ambientes.forEach((g) => {
+    g.addEventListener("mouseenter", () => mostrar(g));
+    g.addEventListener("focus", () => mostrar(g));
+    g.addEventListener("click", () => mostrar(g));
+    g.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        mostrar(g);
+      }
+    });
+  });
+</script>
+
+<style>
+  .plano {
+    background: var(--azul);
+    border-radius: var(--radio);
+    padding: 1.25rem 1.25rem 1rem;
+    color: #fff;
+  }
+
+  .ambiente { cursor: pointer; outline: none; }
+
+  .ambiente rect {
+    fill: transparent;
+    stroke: #fff;
+    stroke-width: 2.5;
+    /* Efecto de "dibujado" al cargar: el único movimiento automático de la página */
+    stroke-dasharray:100;
+    stroke-dashoffset: 100;
+    animation: dibujar 0.9s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.12s);
+    transition: fill 0.15s;
+  }
+
+  .ambiente text {
+    fill: rgba(255, 255, 255, 0.85);
+    font-size: 11px;
+    font-weight: 500;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+  }
+
+  .ambiente:hover rect,
+  .ambiente.activo rect { fill: rgba(201, 139, 43, 0.35); }
+
+  .ambiente:focus-visible rect { stroke: var(--ocre); stroke-width: 4; }
+
+  .puerta {
+    fill: none;
+    stroke: var(--ocre);
+    stroke-width: 1.5;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: dibujar 0.6s ease-out 1.1s forwards;
+  }
+
+  @keyframes dibujar { to { stroke-dashoffset: 0; } }
+
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: 0.9rem;
+  }
+  .tipo { font-weight: 600; }
+  .detalle { color: var(--azul-claro); }
+</style>

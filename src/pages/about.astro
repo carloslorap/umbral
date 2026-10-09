@@ -1,0 +1,56 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const valores = [
+  { titulo: "Precio final por escrito", texto: "Lo que cotizamos es lo que pagas, sin adicionales al firmar." },
+  { titulo: "Planos con medidas reales", texto: "Cada ambiente medido, no solo el área total." },
+  { titulo: "Acompañamiento en el crédito", texto: "Te ayudamos con el banco o el Fondo MiVivienda." },
+];
+---
+
+<Layout title="Nosotros | Umbral Inmobiliaria">
+  <Header />
+  <main class="contenedor">
+    <h1>Sobre nosotros</h1>
+    <p class="intro">
+      Desde 2012 vendemos departamentos en Lima Moderna. Más de 1,200 familias ya recibieron sus llaves con nosotros.
+    </p>
+
+    <ul class="valores">
+      {valores.map((v) => (
+        <li>
+          <h2>{v.titulo}</h2>
+          <p>{v.texto}</p>
+        </li>
+      ))}
+    </ul>
+
+    <a class="boton" href="/#contacto">Agendar visita</a>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  main { padding-block: 4rem; }
+  h1 {
+    color: var(--azul);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    font-stretch: 68%;
+    line-height: 1;
+  }
+  .intro { margin-top: 1rem; max-width: 50ch; color: var(--concreto); font-size: 1.15rem; }
+  .valores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin-block: 3rem;
+    padding: 0;
+    list-style: none;
+  }
+  .valores li { border-top: 2px solid var(--azul); padding-top: 1rem; }
+  .valores h2 { font-size: 1.15rem; color: var(--azul); }
+  .valores p { margin-top: 0.4rem; color: var(--concreto); }
+</style>

@@ -1,0 +1,60 @@
+---
+import PlanoDepa from "./PlanoDepa.astro";
+---
+
+<section class="hero">
+  <div class="contenedor grid">
+    <div class="texto">
+      <h1>Mira tu depa metro por metro antes de separarlo</h1>
+      <p class="bajada">
+        Vendemos departamentos en seis proyectos de Lima Moderna. Cada uno viene con su plano medido,
+        el precio final y la fecha de entrega por escrito.
+      </p>
+      <div class="acciones">
+        <a class="boton" href="#proyectos">Ver proyectos</a>
+        <a class="boton boton--linea" href="#contacto">Agendar visita</a>
+      </div>
+    </div>
+
+    <PlanoDepa />
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: clamp(3rem, 7vw, 6rem); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+
+  h1 {
+    color: var(--azul);
+    font-size: clamp(2.7rem, 6.2vw, 5.1rem);
+    font-weight: 800;
+    font-stretch: 68%;          /* Archivo condensada: el titular es la pieza tipográfica */
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    max-width: 12ch;
+  }
+
+  .bajada {
+    margin-top: 1.5rem;
+    max-width: 44ch;
+    color: var(--concreto);
+    font-size: 1.15rem;
+  }
+
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>

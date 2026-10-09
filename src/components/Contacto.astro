@@ -1,0 +1,155 @@
+---
+import { proyectos } from "../data/proyectos";
+---
+
+<section id="contacto" class="seccion">
+  <div class="contenedor grid">
+    <div class="info">
+      <h2>Agenda una visita al piloto</h2>
+      <p>Déjanos tus datos y un asesor te llama el mismo día para coordinar la visita.</p>
+
+      <dl>
+        <div>
+          <dt>Sala de ventas</dt>
+          <dd>Av. Cuba 645, Jesús María</dd>
+        </div>
+        <div>
+          <dt>Horario</dt>
+          <dd>Lunes a sábado, de 10 a. m. a 7 p. m.</dd>
+        </div>
+        <div>
+          <dt>WhatsApp</dt>
+          <dd><a href="https://wa.me/51999999999">+51 999 999 999</a></dd>
+        </div>
+      </dl>
+    </div>
+
+    <form class="formulario" data-formulario>
+      <label>
+        Nombre completo
+        <input name="nombre" type="text" autocomplete="name" required />
+      </label>
+      <div class="dos">
+        <label>
+          Celular
+          <input name="celular" type="tel" inputmode="numeric" pattern="9[0-9]{8}" placeholder="9XXXXXXXX" required />
+        </label>
+        <label>
+          Correo
+          <input name="correo" type="email" autocomplete="email" required />
+        </label>
+      </div>
+      <label>
+        Proyecto de interés
+        <select name="proyecto" data-select-proyecto>
+          <option value="">Aún no lo decido</option>
+          {proyectos.map((p) => <option value={p.id}>{p.nombre}, {p.distrito}</option>)}
+        </select>
+      </label>
+      <label>
+        Mensaje (opcional)
+        <textarea name="mensaje" rows="3"></textarea>
+      </label>
+
+      <button class="boton" type="submit">Agendar visita</button>
+      <p class="confirmacion" role="status" data-confirmacion hidden></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-formulario]");
+  const select = document.querySelector<HTMLSelectElement>("[data-select-proyecto]");
+  const confirmacion = document.querySelector<HTMLElement>("[data-confirmacion]");
+
+  // Si vienen de "Consultar" en la lista (?proyecto=id), preseleccionamos el proyecto
+  const id = new URLSearchParams(location.search).get("proyecto");
+  if (id && select) select.value = id;
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    const datos = Object.fromEntries(new FormData(form));
+    console.log("Solicitud de visita:", datos); // aquí iría tu fetch a un endpoint
+
+    if (confirmacion) {
+      confirmacion.hidden = false;
+      confirmacion.textContent = `Visita solicitada. Te llamamos hoy al ${datos.celular}.`;
+    }
+    form.reset();
+  });
+</script>
+
+<style>
+  .seccion {
+    padding-block: clamp(3.5rem, 7vw, 6rem);
+    background: var(--azul);
+    color: #fff;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    font-stretch: 68%;
+    line-height: 1;
+  }
+
+  .info > p { margin-top: 1rem; color: var(--azul-claro); max-width: 40ch; }
+
+  dl { margin-top: 2rem; display: grid; gap: 1rem; }
+  dt { color: var(--azul-claro); font-size: 0.85rem; }
+  dd { margin: 0; font-weight: 600; }
+
+  .formulario {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: #fff;
+    color: var(--tinta);
+    border-radius: var(--radio);
+  }
+
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  label { display: grid; gap: 0.35rem; font-size: 0.92rem; font-weight: 500; }
+
+  input, select, textarea {
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    background: var(--muro);
+    font-weight: 400;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--azul);
+    outline-offset: 0;
+    border-color: var(--azul);
+  }
+  input:user-invalid { border-color: #b3261e; }
+
+  .formulario .boton { justify-self: start; }
+
+  .confirmacion {
+    padding: 0.75rem 1rem;
+    background: #d7eadb;
+    color: #22593a;
+    border-radius: var(--radio);
+    font-weight: 600;
+  }
+
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .dos { grid-template-columns: 1fr; }
+  }
+</style>

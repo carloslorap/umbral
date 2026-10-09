@@ -1,0 +1,80 @@
+---
+// Aquí sí usamos números: es una secuencia real de pasos.
+const pasos = [
+  {
+    titulo: "Elige tu depa",
+    texto: "Visita el piloto o revisa los planos con un asesor. Te enviamos la cotización con el precio final, sin adicionales escondidos.",
+  },
+  {
+    titulo: "Sepáralo",
+    texto: "Con S/ 2,000 bloqueamos la unidad por 15 días mientras preparas la cuota inicial.",
+  },
+  {
+    titulo: "Tramita el crédito",
+    texto: "Trabajamos con los principales bancos y con el Fondo MiVivienda. Te ayudamos a armar el expediente.",
+  },
+  {
+    titulo: "Firma y recibe tus llaves",
+    texto: "Firmamos la minuta en notaría y te entregamos el depa con acta de entrega y garantías.",
+  },
+];
+---
+
+<section id="proceso" class="seccion">
+  <div class="contenedor">
+    <h2>Cómo comprar con nosotros</h2>
+    <ol class="pasos">
+      {
+        pasos.map((paso, i) => (
+          <li>
+            <span class="numero" aria-hidden="true">{i + 1}</span>
+            <h3>{paso.titulo}</h3>
+            <p>{paso.texto}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .seccion { padding-block: clamp(3.5rem, 7vw, 6rem); }
+
+  h2 {
+    color: var(--azul);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    font-stretch: 68%;
+    line-height: 1;
+  }
+
+  .pasos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-top: 2.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  li { border-top: 2px solid var(--azul); padding-top: 1rem; }
+
+  .numero {
+    display: block;
+    color: var(--ocre);
+    font-size: 3.5rem;
+    font-weight: 800;
+    font-stretch: 62%;
+    line-height: 1;
+  }
+
+  h3 { margin-top: 0.75rem; font-size: 1.15rem; color: var(--azul); }
+  p { margin-top: 0.4rem; color: var(--concreto); font-size: 0.98rem; }
+
+  @media (max-width: 900px) {
+    .pasos { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 540px) {
+    .pasos { grid-template-columns: 1fr; }
+  }
+</style>

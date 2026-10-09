@@ -1,0 +1,71 @@
+/* Tokens globales. Los estilos de cada componente viven en su propio <style> (scoped). */
+:root {
+  --azul: #1e3354;       /* tinta de plano */
+  --azul-claro: #dce3ec;
+  --muro: #f2f3f0;       /* fondo, gris muro */
+  --linea: #d4d8d2;
+  --concreto: #646b67;   /* texto secundario */
+  --tinta: #17202b;      /* texto principal */
+  --ocre: #c98b2b;       /* acento: marcador de obra */
+
+  --font: "Archivo", system-ui, sans-serif;
+  --radio: 4px;
+  --ancho: 1180px;
+
+  /* Columnas compartidas entre el encabezado de la lista y cada fila */
+  --cols-proyecto: 2.1fr 1fr 0.9fr 1fr 1.25fr 1.2fr auto;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+body {
+  font-family: var(--font);
+  background: var(--muro);
+  color: var(--tinta);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+main{
+  min-height: 99vh;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+.contenedor {
+  width: min(100% - 2.5rem, var(--ancho));
+  margin-inline: auto;
+}
+
+/* Botones reutilizables (globales porque se usan en varios componentes) */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.4rem;
+  border: 2px solid var(--azul);
+  border-radius: var(--radio);
+  background: var(--azul);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.boton:hover { background: #142540; border-color: #142540; }
+.boton--linea { background: transparent; color: var(--azul); }
+.boton--linea:hover { background: var(--azul); color: #fff; }
+
+:focus-visible { outline: 3px solid var(--ocre); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
